@@ -1,0 +1,76 @@
+﻿Operator			Description
+
+********************* Aggregation ********************* 
+Average				Computes the average of a sequence of numeric values
+Count				Returns the number of the items in a sequence as an int
+LongCount			Returns the number of the items in a sequence as a long
+Min					Finds the minimum number of a sequence of numbers
+Max					Finds the maximum number of a sequence of numbers
+Sum					Sums the numbers in a sequence
+
+********************* Concatenation ********************* 
+Concat				Concatenates two sequences into one sequence
+
+********************* Conversion ********************* 
+Cast				Casts elements in a sequence to a given type
+OfType				Filters elements in a sequence of a given type
+ToArray				Returns an Array from a sequence
+ToDictionary		Returns a Dictionary from a sequence
+ToList				Returns a List from a sequence
+ToLookup			Returns a Lookup from a sequence
+ToSequence			Returns an IEnumerable sequence
+
+********************* Element ********************* 
+DefaultIfEmpty		Creates a default element for an empty sequence
+ElementAt			Returns the element at a given index in a sequence
+ElementAtOrDefault	Returns the element at a given index in a sequence or a default value if the index is out of range
+First				Returns the first element of a sequence
+FirstOrDefault		Returns the first element of a sequence or a default value if no element is found
+Last				Returns the last element of a sequence
+LastOrDefault		Returns the last element of a sequence or a default value if no element is found
+Single				Returns the single element of a sequence
+SingleOrDefault		Returns the single element of a sequence or a default value if no element is found
+
+********************* Equality ********************* 
+SequenceEqual		Compares two sequences to see if they are equivalent
+
+********************* Data Generation ********************* 
+Empty				Generates an empty sequence
+Range				Generates a sequence given a range
+Repeat				Generates a sequence by repeating an item a given number of times
+
+********************* Grouping ********************* 
+GroupBy				Groups items in a sequence by a given grouping
+
+********************* Joining ********************* 
+GroupJoin			Performs a grouped join on two sequences
+Join				Performs an inner join on two sequences
+
+********************* Ordering ********************* 
+OrderBy				Orders a sequence by value(s) in ascending order
+OrderByDescending	Orders a sequence by value(s) in descending order
+ThenBy				Orders an already-ordered sequence in ascending order
+ThenByDescending	Orders an already-ordered sequence in descending order
+Reverse				Reverses the order of the items in a sequence
+
+********************* Partitioning ********************* 
+Skip				Returns a sequence that skips a given number of items
+SkipWhile			Returns a sequence that skips items that do not meet an expression
+Take				Returns a sequence that takes a given number of items
+TakeWhile			Returns a sequence that takes items that meet an expression
+Select				Creates a projection of parts of a sequence
+
+********************* Quantifiers ********************* 
+SelectMany			Creates a one-to-many projection of parts of a sequence
+All					Determines if all items in a sequence meet a condition
+Any					Determines if any items in a sequence meet a condition
+Contains			Determines if a sequence contains a given item
+
+********************* Restriction ********************* 
+Where				Filters the items in a sequence
+
+********************* Set *********************  
+Distinct			Returns a sequence without duplicate items
+Except				Returns a sequence representing the difference between two sequences
+Intersect			Returns a sequence representing the intersection of two sequences
+Union				Returns a sequence representing the union of two sequences

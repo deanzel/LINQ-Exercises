@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters;
+using System.Xml.Linq;
 
 namespace LINQ
 {
@@ -30,7 +31,11 @@ namespace LINQ
             //NameOfProductsUpper();
             //EvenUnitsStock();
             //ProductsName8();
-            PairsFromBC();
+            //PairsFromBC();
+
+            //First3NumbersA();
+
+            //Skip3NumbersA();
 
             Console.ReadLine();
         }
@@ -200,6 +205,12 @@ namespace LINQ
                     C = pairs.Y
                 };
 
+            //var results = BCPairs.Where(pairs => pairs.X < pairs.Y).Select(pairs => new
+            //{
+            //    B = pairs.X,
+            //    C = pairs.Y
+            //});
+
             foreach (var pair in results)
             {
                 Console.WriteLine("({0}, {1})", pair.B, pair.C);
@@ -208,6 +219,60 @@ namespace LINQ
         }
 
         //10. Select CustomerID, OrderID, and Total where the order total is less than 500.00.
+        //private static void OrderLessThan500()
+        //{
+        //    var customers = DataLoader.LoadCustomers();
+
+        //    var results = from c in customers
+        //                  select new
+        //                  {
+        //                      Orders = 
+        //                  }
+
+        //}
+
+
+        //11. Write a query to take only the first 3 elements from NumbersA.
+        private static void First3NumbersA()
+        {
+            int[] NumbersA = DataLoader.NumbersA;
+
+            var results = NumbersA.Take(3);
+
+            foreach (var i in results)
+            {
+                Console.WriteLine(i);
+            }
+        }
+
+        //12. Get only the first 3 orders from customers in Washington.
+        private static void First3Washington()
+        {
+            var customers = DataLoader.LoadCustomers();
+
+            var WashCustomers = from c in customers
+                where c.Region == "WA"
+                select c;
+
+            var results = from c in WashCustomers
+                          
+        }
+
+        //13. Skip the first 3 elements of NumbersA.
+        private static void Skip3NumbersA()
+        {
+            int[] NumbersA = DataLoader.NumbersA;
+
+            var results = NumbersA.Skip(3);
+
+            foreach (var i in results)
+            {
+                Console.WriteLine(i);
+            }
+        }
+
+        //14. Get all except the first two orders from customers in Washington.
+
     }
 }
 

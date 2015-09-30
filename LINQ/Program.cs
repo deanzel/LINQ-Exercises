@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Globalization;
 using System.Linq;
 using System.Net.Sockets;
@@ -43,7 +44,11 @@ namespace LINQ
             //NumbersLessIndex();
             //NumbersCDiv3();
             //ProdsAlphabetic();
-            ProdsDescStock();
+            //ProdsDescStock();
+            //ProdsCatDescPrice();
+            //ReverseNumbersC();
+            //NumbersCGroup5();
+            ProdsByCat();
 
 
             Console.ReadLine();
@@ -405,7 +410,11 @@ namespace LINQ
         {
             var products = DataLoader.LoadProducts();
 
-            var results = products.OrderByDescending(p => p.UnitsInStock);
+            var results = from p in products
+                orderby p.UnitsInStock descending
+                select p;
+
+            //var results = products.OrderByDescending(p => p.UnitsInStock);
 
             foreach (var result in results)
             {
@@ -413,7 +422,84 @@ namespace LINQ
             }
         }
 
-        //20. 
+        //20. Sort the list of products, first by category, and then by unit price, from highest to lowest.
+        private static void ProdsCatDescPrice()
+        {
+            var products = DataLoader.LoadProducts();
+
+            var results = from p in products
+                orderby p.UnitPrice descending
+                group p by p.Category;
+
+            //var results = products.OrderByDescending(p => p.UnitPrice).GroupBy(p => p.Category);
+
+            foreach (var group in results)
+            {
+                Console.WriteLine(group.Key);
+
+                foreach (var result in group)
+                {
+                    Console.WriteLine("\t{0} costs {1}", result.ProductName, result.UnitPrice);
+                }
+
+            }
+        }
+
+        //21. Reverse NumbersC.
+        private static void ReverseNumbersC()
+        {
+            int[] NumbersC = DataLoader.NumbersC;
+            //public static int[] NumbersC = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+
+            var results = NumbersC.Reverse();
+
+            foreach (var result in results)
+            {
+                Console.WriteLine(result);
+            }
+        }
+
+        //22. Display the elements of NumbersC grouped by their remainder when divided by 5.
+        private static void NumbersCGroup5()
+        {
+            int[] NumbersC = DataLoader.NumbersC;
+
+            var results = from c in NumbersC
+                group c by c%5;
+
+            //var results = NumbersC.GroupBy(c => c%5);
+
+            foreach (var group in results)
+            {
+                Console.WriteLine("Remainder when divided by 5 is " + group.Key);
+
+                foreach (var number in group)
+                {
+                    Console.WriteLine("\t" + number);
+                }
+            }
+        }
+
+        //23. Display products by Category.
+        private static void ProdsByCat()
+        {
+            var products = DataLoader.LoadProducts();
+
+            var results = from p in products
+                group p by p.Category;
+
+            foreach (var group in results)
+            {
+                Console.WriteLine(group.Key + ":");
+
+                foreach (var result in group)
+                {
+                    Console.WriteLine("\t" + result.ProductName);
+                }
+            }
+        }
+
+        //24. Group customer orders by year, then by month.
 
 
     }

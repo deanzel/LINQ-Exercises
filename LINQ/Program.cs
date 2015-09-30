@@ -26,32 +26,37 @@ namespace LINQ
 
         private static void Main()
         {
-            //PrintOutOfStock();
-            //InStockMoreThan3();
-            //CustomersInWashington();
-            //NameOfProducts();
-            //UnitPriceIncrease25();
-            //NameOfProductsUpper();
-            //EvenUnitsStock();
-            //ProductsName8();
-            //PairsFromBC();
-            //OrderLessThan500();
-            //First3NumbersA();
-            //First3Washington();
-            //Skip3NumbersA();
-            //Skip2Washington();
-            //NumbersCGreater6();
-            //NumbersLessIndex();
-            //NumbersCDiv3();
-            //ProdsAlphabetic();
-            //ProdsDescStock();
-            //ProdsCatDescPrice();
-            //ReverseNumbersC();
-            //NumbersCGroup5();
-            //ProdsByCat();
-            OrderByYearThenMonth();
-
-
+            //PrintOutOfStock(); //1
+            //InStockMoreThan3(); //2
+            //CustomersInWashington(); //3
+            //NameOfProducts(); //4
+            //UnitPriceIncrease25(); //5
+            //NameOfProductsUpper(); //6
+            //EvenUnitsStock(); //7
+            //ProductsName8(); //8
+            //PairsFromBC(); //9
+            //OrderLessThan500(); //10
+            //First3NumbersA(); //11
+            //First3Washington(); //12
+            //Skip3NumbersA(); //13
+            //Skip2Washington(); //14
+            //NumbersCGreater6(); //15
+            //NumbersLessIndex(); //16
+            //NumbersCDiv3(); //17
+            //ProdsAlphabetic(); //18
+            //ProdsDescStock(); //19
+            //ProdsCatDescPrice(); //20
+            //ReverseNumbersC(); //21
+            //NumbersCGroup5(); //22
+            //ProdsByCat(); //23
+            //OrderByYearThenMonth(); //24
+            //UniqueCategories(); //25
+            //UniqueFromAB(); //26
+            //SharedAB(); //27
+            //InAButNotB(); //28
+            //SelectProdID12(); //29
+            //DoesID789Exist(); //30
+            AtLeastOneOOS();
 
             Console.ReadLine();
         }
@@ -523,6 +528,97 @@ namespace LINQ
         }
 
         //25. Create a list of unique product category names.
+        private static void UniqueCategories()
+        {
+            var products = DataLoader.LoadProducts();
+
+            var results = products.Select(c => c.Category).Distinct();
+
+            foreach (var result in results)
+            {
+                Console.WriteLine(result);
+            }
+        }
+
+        //26. Get a list of unique values from NumbersA and NumbersB.
+        private static void UniqueFromAB()
+        {
+            int[] NumbersA = DataLoader.NumbersA;
+            int[] NumbersB = DataLoader.NumbersB;
+
+            var results = NumbersA.Union(NumbersB);
+
+            foreach (var result in results)
+            {
+                Console.WriteLine(result);
+            }
+        }
+
+        //27. Get a list of the shared values from NumbersA and NumbersB.
+        private static void SharedAB()
+        {
+            int[] NumbersA = DataLoader.NumbersA;
+            int[] NumbersB = DataLoader.NumbersB;
+
+            var results = NumbersA.Intersect(NumbersB);
+
+            foreach (var result in results)
+            {
+                Console.WriteLine(result);
+            }
+        }
+
+        //28. Get a list of values in NumbersA that are not also in NumbersB.
+        private static void InAButNotB()
+        {
+            int[] NumbersA = DataLoader.NumbersA;
+            int[] NumbersB = DataLoader.NumbersB;
+
+            var results = NumbersA.Except(NumbersB);
+
+            foreach (var result in results)
+            {
+                Console.WriteLine(result);
+            }
+        }
+
+        //29. Select only the first product with ProductID = 12 (not a list)
+        private static void SelectProdID12()
+        {
+            var products = DataLoader.LoadProducts();
+
+            var results = products.First(p => p.ProductID == 12);
+
+            Console.WriteLine("{0} is ProductID {1}", results.ProductName, results.ProductID);
+        }
+
+        //30. Write code to check if ProductID 789 exists.
+        private static void DoesID789Exist()
+        {
+            var products = DataLoader.LoadProducts();
+
+            var results = products.Exists(p => p.ProductID == 789);
+
+            Console.WriteLine(results);
+        }
+
+        //31. Get a list of categories that have at least one product out of stock.
+        private static void AtLeastOneOOS()
+        {
+            var products = DataLoader.LoadProducts();
+
+            var results = products.Where(p => p.UnitsInStock == 0).Select(p => new
+            {
+                Category = p.Category
+            }).Distinct();
+
+            foreach (var result in results)
+            {
+                Console.WriteLine(result.Category);
+            }
+        }
+
+        //32. Determine if NumbersB contains only numbers less than 9.
 
 
     }

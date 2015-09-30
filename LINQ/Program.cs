@@ -48,7 +48,9 @@ namespace LINQ
             //ProdsCatDescPrice();
             //ReverseNumbersC();
             //NumbersCGroup5();
-            ProdsByCat();
+            //ProdsByCat();
+            OrderByYearThenMonth();
+
 
 
             Console.ReadLine();
@@ -488,6 +490,8 @@ namespace LINQ
             var results = from p in products
                 group p by p.Category;
 
+            //var results = products.GroupBy(p => p.Category);
+
             foreach (var group in results)
             {
                 Console.WriteLine(group.Key + ":");
@@ -500,10 +504,32 @@ namespace LINQ
         }
 
         //24. Group customer orders by year, then by month.
+        private static void OrderByYearThenMonth()
+        {
+            var customers = DataLoader.LoadCustomers();
+
+            var results = from c in customers
+                from o in c.Orders
+                group o by new {o.OrderDate.Year, o.OrderDate.Month};
+
+            foreach (var group in results)
+            {
+                Console.WriteLine("Year {0}, Month {1}:", group.Key.Year, group.Key.Month);
+                foreach (var result in group)
+                {
+                    Console.WriteLine("\tOrderID {0} on {1}", result.OrderID, result.OrderDate.ToString("d"));
+                }
+            }
+        }
+
+        //25. Create a list of unique product category names.
 
 
     }
+
+
 }
+
 
 
 

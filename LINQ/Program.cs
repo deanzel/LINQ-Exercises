@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters;
 using System.Xml.Linq;
@@ -32,9 +33,9 @@ namespace LINQ
             //EvenUnitsStock();
             //ProductsName8();
             //PairsFromBC();
-
+            //OrderLessThan500();
             //First3NumbersA();
-
+            First3Washington();
             //Skip3NumbersA();
 
             Console.ReadLine();
@@ -189,12 +190,9 @@ namespace LINQ
             int[] NumbersC = DataLoader.NumbersC;
             List<Point> BCPairs = new List<Point>();
 
-            for (int b = 0; b < NumbersB.Length; b++)
+            for (int i = 0; i < NumbersB.Length; i++)
             {
-                for (int c = 0; c < NumbersC.Length; c++)
-                {
-                    BCPairs.Add(new Point() {X = NumbersB[b], Y = NumbersC[c]});
-                }
+                    BCPairs.Add(new Point() {X = NumbersB[i], Y = NumbersC[i]});
             }
 
             var results = from pairs in BCPairs
@@ -205,11 +203,7 @@ namespace LINQ
                     C = pairs.Y
                 };
 
-            //var results = BCPairs.Where(pairs => pairs.X < pairs.Y).Select(pairs => new
-            //{
-            //    B = pairs.X,
-            //    C = pairs.Y
-            //});
+           
 
             foreach (var pair in results)
             {
@@ -219,17 +213,35 @@ namespace LINQ
         }
 
         //10. Select CustomerID, OrderID, and Total where the order total is less than 500.00.
-        //private static void OrderLessThan500()
-        //{
-        //    var customers = DataLoader.LoadCustomers();
+        private static void OrderLessThan500()
+        {
+            var customers = DataLoader.LoadCustomers();
 
-        //    var results = from c in customers
-        //                  select new
-        //                  {
-        //                      Orders = 
-        //                  }
+            var results = from c in customers
+                from o in c.Orders
+                where o.Total < 500
+                select new
+                {
+                    CustomerID = c.CustomerID,
+                    OrderID = o.OrderID,
+                    Total = o.Total
+                };
 
-        //}
+            //var results =
+            //    customers.SelectMany(c => c.Orders, (c, o) => new { c, o }).Where(@t => @t.o.Total < 500).Select(@t => new
+            //    {
+            //        @t.c.CustomerID,
+            //        @t.o.OrderID,
+            //        @t.o.Total
+            //    });
+
+            foreach (var order in results)
+            {
+                Console.WriteLine("{0} has OrderID #{1} which cost ${2}", order.CustomerID, order.OrderID, order.Total);
+            }
+
+
+        }
 
 
         //11. Write a query to take only the first 3 elements from NumbersA.
@@ -250,12 +262,23 @@ namespace LINQ
         {
             var customers = DataLoader.LoadCustomers();
 
-            var WashCustomers = from c in customers
+            var WashOrders = from c in customers
+                from o in c.Orders
                 where c.Region == "WA"
-                select c;
+                select o;
 
-            var results = from c in WashCustomers
-                          
+            //var WashOrders =
+            //    customers.SelectMany(c => c.Orders, (c, o) => new { c, o })
+            //        .Where(@t => @t.c.Region == "WA")
+            //        .Select(@t => @t.o);
+
+            var results = WashOrders.Take(3);
+
+            foreach (var order in results)
+            {
+                Console.WriteLine(order.OrderID);
+            }
+
         }
 
         //13. Skip the first 3 elements of NumbersA.

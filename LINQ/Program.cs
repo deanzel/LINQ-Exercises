@@ -56,7 +56,12 @@ namespace LINQ
             //InAButNotB(); //28
             //SelectProdID12(); //29
             //DoesID789Exist(); //30
-            AtLeastOneOOS();
+            //AtLeastOneOOS(); //31
+            //NumbersBLess9(); //32
+            //CatsAllInStock(); //33
+            //NumbersACountOdds(); //34
+
+
 
             Console.ReadLine();
         }
@@ -517,6 +522,10 @@ namespace LINQ
                 from o in c.Orders
                 group o by new {o.OrderDate.Year, o.OrderDate.Month};
 
+            //var results =
+            //    customers.SelectMany(c => c.Orders, (c, o) => new { c, o })
+            //        .GroupBy(@t => new { @t.o.OrderDate.Year, @t.o.OrderDate.Month }, @t => @t.o);
+
             foreach (var group in results)
             {
                 Console.WriteLine("Year {0}, Month {1}:", group.Key.Year, group.Key.Month);
@@ -619,6 +628,45 @@ namespace LINQ
         }
 
         //32. Determine if NumbersB contains only numbers less than 9.
+        private static void NumbersBLess9()
+        {
+            int[] NumbersB = DataLoader.NumbersB;
+
+            var result = NumbersB.All(b => b < 9);
+
+            Console.WriteLine(result);
+        }
+
+        //33. Get a grouped list of products only for categories that have all of their products in stock.
+        private static void CatsAllInStock()
+        {
+            var products = DataLoader.LoadProducts();
+
+            var results = products.GroupBy(p => p.Category).Where(i => i.All(u => u.UnitsInStock > 0));
+
+            foreach (var group in results)
+            {
+                Console.WriteLine("Category: {0}", group.Key);
+
+                foreach (var product in group)
+                {
+                    Console.WriteLine("\t{0} has {1} in stock", product.ProductName, product.UnitsInStock);
+                }
+            }
+        }
+
+        //34. Count the number of odds in NumbersA.
+        private static void NumbersACountOdds()
+        {
+            int[] NumbersA = DataLoader.NumbersA;
+
+            var results = NumbersA.Where(a => a%2 == 1).Count();
+
+            Console.WriteLine(results);
+        }
+
+        //35. Display a list of CustomerIDs and only the count of their orders.
+
 
 
     }

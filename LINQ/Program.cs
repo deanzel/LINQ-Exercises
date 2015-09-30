@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters;
 using System.Xml.Linq;
@@ -35,10 +36,23 @@ namespace LINQ
             //PairsFromBC();
             //OrderLessThan500();
             //First3NumbersA();
-            First3Washington();
+            //First3Washington();
             //Skip3NumbersA();
+            //Skip2Washington();
+            //NumbersCGreater6();
+            //NumbersLessIndex();
+            //NumbersCDiv3();
+            //ProdsAlphabetic();
+            ProdsDescStock();
+
 
             Console.ReadLine();
+        }
+
+        public class Point
+        {
+            public int X { get; set; }
+            public int Y { get; set; }
         }
 
         private static void PrintOutOfStock()
@@ -178,11 +192,7 @@ namespace LINQ
         }
 
         //9. Make a query that returns all pairs of numbers from both arrays such that the number from numbersB is less than the number from numbersC.
-        public class Point
-        {
-            public int X { get; set; }
-            public int Y { get; set; }
-        }
+        //TODO: Do this without creating the extra list; use multiple "from" statements
 
         private static void PairsFromBC()
         {
@@ -192,7 +202,7 @@ namespace LINQ
 
             for (int i = 0; i < NumbersB.Length; i++)
             {
-                    BCPairs.Add(new Point() {X = NumbersB[i], Y = NumbersC[i]});
+                BCPairs.Add(new Point() {X = NumbersB[i], Y = NumbersC[i]});
             }
 
             var results = from pairs in BCPairs
@@ -203,7 +213,7 @@ namespace LINQ
                     C = pairs.Y
                 };
 
-           
+
 
             foreach (var pair in results)
             {
@@ -295,9 +305,120 @@ namespace LINQ
         }
 
         //14. Get all except the first two orders from customers in Washington.
+        private static void Skip2Washington()
+        {
+            var customers = DataLoader.LoadCustomers();
+
+            var WashOrders = from c in customers
+                from o in c.Orders
+                where c.Region == "WA"
+                select o;
+
+            //var WashOrders =
+            //    customers.SelectMany(c => c.Orders, (c, o) => new { c, o })
+            //        .Where(@t => @t.c.Region == "WA")
+            //        .Select(@t => @t.o);
+
+            var results = WashOrders.Skip(2);
+
+            foreach (var order in results)
+            {
+                Console.WriteLine(order.OrderID);
+            }
+        }
+
+
+        //15. Get all the elements in NumbersC from the beginning until an element is greater or equal to 6.
+        private static void NumbersCGreater6()
+        {
+            int[] NumbersC = DataLoader.NumbersC;
+
+            var results = NumbersC.TakeWhile(i => i <= 6);
+
+            foreach (var i in results)
+            {
+                Console.WriteLine(i);
+            }
+        }
+
+        //16. Return elements starting from the beginning of NumbersC until a number is hit that is less than its position in the array.
+        private static void NumbersLessIndex()
+        {
+            int[] NumbersC = DataLoader.NumbersC;
+
+            //Longer method that doesn't use index position
+            //List<Point> Clist = new List<Point>();
+            //for (int i = 0; i < NumbersC.Length; i++)
+            //{
+            //    Clist.Add(new Point() { X = i, Y = NumbersC[i] });
+            //}
+            //var results = Clist.TakeWhile(point => point.Y > point.X);
+            //foreach (var c in results)
+            //{
+            //    Console.WriteLine(c.Y);
+            //}
+
+            var results = NumbersC.TakeWhile((n, index) => n > index);
+
+            foreach (var result in results)
+            {
+                Console.WriteLine(result);
+            }
+        }
+
+        //17. Return elements from NumbersC starting from the first element divisible by 3.
+        private static void NumbersCDiv3()
+        {
+            int[] NumbersC = DataLoader.NumbersC;
+
+            var results = from n in NumbersC
+                where n%3 == 0
+                select n;
+
+            //var results = NumbersC.Where(n => n%3 == 0);
+
+            foreach (var result in results)
+            {
+                Console.WriteLine(result);
+            }
+        }
+
+        //18. Order products alphabetically by name.
+        private static void ProdsAlphabetic()
+        {
+            var products = DataLoader.LoadProducts();
+
+            var results = from p in products
+                orderby p.ProductName
+                select p;
+
+            //var results = products.OrderBy(p => p.ProductName);
+
+            foreach (var result in results)
+            {
+                Console.WriteLine(result.ProductName);
+            }
+        }
+
+        //19. Order products by UnitsInStock descending.
+        private static void ProdsDescStock()
+        {
+            var products = DataLoader.LoadProducts();
+
+            var results = products.OrderByDescending(p => p.UnitsInStock);
+
+            foreach (var result in results)
+            {
+                Console.WriteLine("{0} has {1} units in stock.", result.ProductName, result.UnitsInStock);
+            }
+        }
+
+        //20. 
+
 
     }
 }
+
 
 
 

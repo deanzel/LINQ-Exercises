@@ -63,7 +63,9 @@ namespace LINQ
             //CustomerIDandOrderCount(); //35
             //CategoriesProdCount(); //36
             //TotalUnitsInStockPerCat(); //37
-
+            //LowestPricedProdInCat(); //38
+            //HighestPricedProdInCat(); //39
+            AvgPriceProdInCat(); //40
 
             Console.ReadLine();
         }
@@ -731,6 +733,64 @@ namespace LINQ
         }
 
         //38. Display the lowest priced product in each category.
+        private static void LowestPricedProdInCat()
+        {
+            var products = DataLoader.LoadProducts();
+
+            var results = from p in products
+                          orderby p.UnitPrice
+                group p by p.Category
+                into c
+                select new { Category = c.Key, Lowest = c.First()};
+
+            //var results =
+            //    products.OrderBy(p => p.UnitPrice)
+            //        .GroupBy(p => p.Category)
+            //        .Select(c => new { Category = c.Key, Lowest = c.First() });
+
+            foreach (var result in results)
+            {
+                Console.WriteLine("The {0} with a price of {1} is the lowest priced product in the {2} category.\n", result.Lowest.ProductName, result.Lowest.UnitPrice.ToString("C"), result.Category);
+            }
+        }
+
+        //39. Display the highest priced product in each category.
+        private static void HighestPricedProdInCat()
+        {
+            var products = DataLoader.LoadProducts();
+
+            var results = from p in products
+                          orderby p.UnitPrice descending
+                          group p by p.Category
+                          into c
+                          select new { Category = c.Key, Highest = c.First() };
+
+            //var results =
+            //    products.OrderByDescending(p => p.UnitPrice)
+            //        .GroupBy(p => p.Category)
+            //        .Select(c => new { Category = c.Key, Highest = c.First() });
+
+            foreach (var result in results)
+            {
+                Console.WriteLine("The {0} with a price of {1} is the highest priced product in the {2} category.\n", result.Highest.ProductName, result.Highest.UnitPrice.ToString("C"), result.Category);
+            }
+        }
+
+        //40. Show the average price of product for each category.
+        private static void AvgPriceProdInCat()
+        {
+            var products = DataLoader.LoadProducts();
+
+            var results = from p in products
+                group p by p.Category
+                into c
+                select new { Category = c.Key, AvgPrice = c.Select(i => i.UnitPrice).Average() };
+
+            foreach (var result in results)
+            {
+                Console.WriteLine("{0} is the average price of product in the {1} category.\n", result.AvgPrice.ToString("C"), result.Category);
+            }
+        }
 
     }
 

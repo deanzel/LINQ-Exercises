@@ -65,7 +65,7 @@ namespace LINQ
             //TotalUnitsInStockPerCat(); //37
             //LowestPricedProdInCat(); //38
             //HighestPricedProdInCat(); //39
-            AvgPriceProdInCat(); //40
+            //AvgPriceProdInCat(); //40
 
             Console.ReadLine();
         }
@@ -793,7 +793,6 @@ namespace LINQ
         }
 
     }
-
 
 }
 

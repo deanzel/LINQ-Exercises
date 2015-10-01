@@ -60,7 +60,9 @@ namespace LINQ
             //NumbersBLess9(); //32
             //CatsAllInStock(); //33
             //NumbersACountOdds(); //34
-
+            //CustomerIDandOrderCount(); //35
+            //CategoriesProdCount(); //36
+            //TotalUnitsInStockPerCat(); //37
 
 
             Console.ReadLine();
@@ -289,18 +291,18 @@ namespace LINQ
         {
             var customers = DataLoader.LoadCustomers();
 
-            var WashOrders = from c in customers
-                from o in c.Orders
-                where c.Region == "WA"
-                select o;
+            //var WashOrders = from c in customers
+            //    from o in c.Orders
+            //    where c.Region == "WA"
+            //    select o;
 
-            //var WashOrders =
-            //    customers.SelectMany(c => c.Orders, (c, o) => new { c, o })
-            //        .Where(@t => @t.c.Region == "WA")
-            //        .Select(@t => @t.o);
+            //var results = WashOrders.Take(3);
 
-            var results = WashOrders.Take(3);
-
+            var results =
+                customers.SelectMany(c => c.Orders, (c, o) => new { c, o })
+                    .Where(@t => @t.c.Region == "WA")
+                    .Select(@t => @t.o).Take(3);
+            
             foreach (var order in results)
             {
                 Console.WriteLine(order.OrderID);
@@ -326,18 +328,18 @@ namespace LINQ
         {
             var customers = DataLoader.LoadCustomers();
 
-            var WashOrders = from c in customers
-                from o in c.Orders
-                where c.Region == "WA"
-                select o;
+            //var WashOrders = from c in customers
+            //    from o in c.Orders
+            //    where c.Region == "WA"
+            //    select o;
 
-            //var WashOrders =
-            //    customers.SelectMany(c => c.Orders, (c, o) => new { c, o })
-            //        .Where(@t => @t.c.Region == "WA")
-            //        .Select(@t => @t.o);
+            //var results = WashOrders.Skip(2);
 
-            var results = WashOrders.Skip(2);
-
+            var results =
+                customers.SelectMany(c => c.Orders, (c, o) => new { c, o })
+                    .Where(@t => @t.c.Region == "WA")
+                    .Select(@t => @t.o).Skip(2);
+            
             foreach (var order in results)
             {
                 Console.WriteLine(order.OrderID);
@@ -666,8 +668,69 @@ namespace LINQ
         }
 
         //35. Display a list of CustomerIDs and only the count of their orders.
+        private static void CustomerIDandOrderCount()
+        {
+            var customers = DataLoader.LoadCustomers();
 
+            var results = from c in customers
+                select new
+                {
+                    CustomerID = c.CustomerID,
+                    OrderCount = c.Orders.Count()
+                };
 
+            //var results = customers.Select(c => new
+            //{
+            //    CustomerID = c.CustomerID,
+            //    OrderCount = c.Orders.Count()
+            //});
+
+            foreach (var result in results)
+            {
+                Console.WriteLine("The customer {0} has made {1} orders.", result.CustomerID, result.OrderCount);
+            }
+        }
+
+        //36. Display a list of categories and the count of their products.
+        private static void CategoriesProdCount()
+        {
+            var products = DataLoader.LoadProducts();
+
+            var results = from p in products
+                group p by p.Category
+                into c
+                select new {Category = c.Key, ProductCount = c.Count()};
+
+            //var results = products.GroupBy(p => p.Category)
+            //    .Select(c => new { Category = c.Key, ProductCount = c.Count() });
+
+            foreach (var result in results)
+            {
+                Console.WriteLine("The {0} category has {1} products.", result.Category, result.ProductCount);
+            }
+        }
+
+        //37. Display the total units in stock for each category.
+        private static void TotalUnitsInStockPerCat()
+        {
+            var products = DataLoader.LoadProducts();
+
+            var results = from p in products
+                group p by p.Category
+                into c
+                select new {Category = c.Key, TotalUnitsInStock = c.Sum(i => i.UnitsInStock)};
+
+            //var results =
+            //    products.GroupBy(p => p.Category)
+            //        .Select(c => new { Category = c.Key, TotalUnitsInStock = c.Sum(prods => prods.UnitsInStock) });
+
+            foreach (var result in results)
+            {
+                Console.WriteLine("The {0} category has {1} total units in stock.", result.Category, result.TotalUnitsInStock);
+            }
+        }
+
+        //38. Display the lowest priced product in each category.
 
     }
 

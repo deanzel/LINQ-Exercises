@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Runtime.Serialization.Formatters;
 using System.Xml.Linq;
 
@@ -49,7 +50,7 @@ namespace LINQ
             //ReverseNumbersC(); //21
             //NumbersCGroup5(); //22
             //ProdsByCat(); //23
-            //OrderByYearThenMonth(); //24
+            OrderByYearThenMonth(); //24
             //UniqueCategories(); //25
             //UniqueFromAB(); //26
             //SharedAB(); //27
@@ -213,33 +214,39 @@ namespace LINQ
         }
 
         //9. Make a query that returns all pairs of numbers from both arrays such that the number from numbersB is less than the number from numbersC.
-        //TODO: Do this without creating the extra list; use multiple "from" statements
-
+        
         private static void PairsFromBC()
         {
             int[] NumbersB = DataLoader.NumbersB;
             int[] NumbersC = DataLoader.NumbersC;
-            List<Point> BCPairs = new List<Point>();
+            //List<Point> BCPairs = new List<Point>();
 
-            for (int i = 0; i < NumbersB.Length; i++)
-            {
-                BCPairs.Add(new Point() {X = NumbersB[i], Y = NumbersC[i]});
-            }
+            //for (int i = 0; i < NumbersB.Length; i++)
+            //{
+            //    BCPairs.Add(new Point() {X = NumbersB[i], Y = NumbersC[i]});
+            //}
 
-            var results = from pairs in BCPairs
-                where pairs.X < pairs.Y
-                select new
-                {
-                    B = pairs.X,
-                    C = pairs.Y
-                };
+            //var results = from pairs in BCPairs
+            //    where pairs.X < pairs.Y
+            //    select new
+            //    {
+            //        B = pairs.X,
+            //        C = pairs.Y
+            //    };
 
+            var results = NumbersB.Select((number, index) => new {b = number, c = NumbersC[index]}).Where(x => x.b < x.c);
 
+            //int i = -1;
+            //var resultsB = from b in NumbersB
+            //    let index = i++
+            //    where b < NumbersC[index]
+            //    select new {b, c = NumbersC[index]};
 
             foreach (var pair in results)
             {
-                Console.WriteLine("({0}, {1})", pair.B, pair.C);
+                Console.WriteLine("({0}, {1})", pair.b, pair.c);
             }
+
 
         }
 
@@ -522,22 +529,64 @@ namespace LINQ
         {
             var customers = DataLoader.LoadCustomers();
 
+            //var results = from c in customers
+            //    from o in c.Orders
+            //    orderby o.OrderDate.Date
+            //    group o by new {o.OrderDate.Year, o.OrderDate.Month};
+
+            ////var results =
+            ////    customers.SelectMany(c => c.Orders, (c, o) => new { c, o })
+            ////        .OrderBy(x => x.o.OrderDate.Date)
+            ////        .GroupBy(x => new { x.o.OrderDate.Year, x.o.OrderDate.Month }, x => x.o);
+
+            //foreach (var group in results)
+            //{
+            //    Console.WriteLine("Year {0}, Month {1}:", group.Key.Year, group.Key.Month);
+            //    foreach (var result in group)
+            //    {
+            //        Console.WriteLine("\tOrderID {0} on {1}", result.OrderID, result.OrderDate.ToString("d"));
+            //    }
+            //}
+
             var results = from c in customers
-                from o in c.Orders
-                group o by new {o.OrderDate.Year, o.OrderDate.Month};
-
-            //var results =
-            //    customers.SelectMany(c => c.Orders, (c, o) => new { c, o })
-            //        .GroupBy(@t => new { @t.o.OrderDate.Year, @t.o.OrderDate.Month }, @t => @t.o);
-
-            foreach (var group in results)
-            {
-                Console.WriteLine("Year {0}, Month {1}:", group.Key.Year, group.Key.Month);
-                foreach (var result in group)
+                select new
                 {
-                    Console.WriteLine("\tOrderID {0} on {1}", result.OrderID, result.OrderDate.ToString("d"));
+                    YearGroups = from o in c.Orders
+                        group o by o.OrderDate.Year
+                        into yg
+                        select new
+                        {
+                            Year = yg.Key,
+                            MonthGroups = from o in yg
+                                group o by o.OrderDate.Month
+                                into mg
+                                select new
+                                {
+                                    Month = mg.Key,
+                                    Orders = mg
+                                }
+
+                        }
+                };
+
+            foreach (var yearGroup in results)
+            {
+                //Console.WriteLine(order.YearGroups);
+                foreach (var month in yearGroup.YearGroups)
+                {
+                   // Console.WriteLine("\t" + group.MonthGroups);
+                    foreach (var o in month.MonthGroups)
+                    {
+                        foreach (var order in o.Orders)
+                        {
+                            Console.WriteLine("{0} - {1} - {2} - {3}", month.Year, o.Month, order.OrderDate, order.OrderID);
+                        }
+                    }
                 }
+                
+
             }
+
         }
 
         //25. Create a list of unique product category names.

@@ -50,7 +50,7 @@ namespace LINQ
             //ReverseNumbersC(); //21
             //NumbersCGroup5(); //22
             //ProdsByCat(); //23
-            OrderByYearThenMonth(); //24
+            //OrderByYearThenMonth(); //24
             //UniqueCategories(); //25
             //UniqueFromAB(); //26
             //SharedAB(); //27
@@ -62,7 +62,7 @@ namespace LINQ
             //CatsAllInStock(); //33
             //NumbersACountOdds(); //34
             //CustomerIDandOrderCount(); //35
-            //CategoriesProdCount(); //36
+            CategoriesProdCount(); //36
             //TotalUnitsInStockPerCat(); //37
             //LowestPricedProdInCat(); //38
             //HighestPricedProdInCat(); //39
@@ -300,21 +300,29 @@ namespace LINQ
         {
             var customers = DataLoader.LoadCustomers();
 
-            //var WashOrders = from c in customers
-            //    from o in c.Orders
-            //    where c.Region == "WA"
-            //    select o;
+            var WashOrders = from c in customers
+                             from o in c.Orders
+                             where c.Region == "WA"
+                             select new 
+                             {c.CustomerID,
+                             o.OrderID,
+                             o.OrderDate};
 
-            //var results = WashOrders.Take(3);
+            var results = WashOrders.Take(3);
 
-            var results =
-                customers.SelectMany(c => c.Orders, (c, o) => new { c, o })
-                    .Where(@t => @t.c.Region == "WA")
-                    .Select(@t => @t.o).Take(3);
-            
+            //var results =
+            //    customers.SelectMany(c => c.Orders, (c, o) => new { c, o })
+            //        .Where(@t => @t.c.Region == "WA")
+            //        .Select(@t => new
+            //        {
+            //            @t.c.CustomerID,
+            //            @t.o.OrderID,
+            //            @t.o.OrderDate
+            //        }).Take(3);
+
             foreach (var order in results)
             {
-                Console.WriteLine(order.OrderID);
+                Console.WriteLine("{0} on {1} by {2}", order.OrderID, order.OrderDate, order.CustomerID);
             }
 
         }
@@ -338,20 +346,30 @@ namespace LINQ
             var customers = DataLoader.LoadCustomers();
 
             //var WashOrders = from c in customers
-            //    from o in c.Orders
-            //    where c.Region == "WA"
-            //    select o;
+            //                 from o in c.Orders
+            //                 where c.Region == "WA"
+            //                 select new
+            //                 {
+            //                     c.CustomerID,
+            //                     o.OrderID,
+            //                     o.OrderDate
+            //                 };
 
             //var results = WashOrders.Skip(2);
 
             var results =
                 customers.SelectMany(c => c.Orders, (c, o) => new { c, o })
                     .Where(@t => @t.c.Region == "WA")
-                    .Select(@t => @t.o).Skip(2);
-            
+                    .Select(@t => new
+                    {
+                        @t.c.CustomerID,
+                        @t.o.OrderID,
+                        @t.o.OrderDate
+                    }).Skip(2);
+
             foreach (var order in results)
             {
-                Console.WriteLine(order.OrderID);
+                Console.WriteLine("{0} on {1} by {2}", order.OrderID, order.OrderDate, order.CustomerID);
             }
         }
 
